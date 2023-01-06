@@ -4,26 +4,26 @@
 mod tests;
 
 mod io;
-use io::{Action, Event};
+use io::{FlipperAction, FlipperEvent};
 
 use gstd::prelude::*;
 
 gstd::metadata! {
   title: "flipper",
   handle:
-    input: Action,
-    output: Event,
+    input: FlipperAction,
+    output: FlipperEvent,
 }
 
-static mut STATE: bool = false;
+static mut FlipperState: bool = false;
 
 #[no_mangle]
-extern "C" fn handle() {
-    let action: Action = gstd::msg::load().expect("failed to load input message");
+unsafe extern "C" fn handle() {
+    let action: FlipperAction = gstd::msg::load().expect("failed to load input message");
     match action {
-        Action::Flip => unsafe {
-            STATE = !STATE;
-            let event = Event::FlippedTo(STATE as u8);
+        FlipperAction::Flip => {
+            FlipperState = !FlipperState;
+            let event = FlipperEvent::FlippedTo(FlipperState as u8);
             gstd::msg::reply(event, 0).expect("failed to send response");
         },
     }

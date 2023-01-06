@@ -7,17 +7,14 @@ fn it_works() {
 
     let program = Program::current(&system);
 
-    fn init_program(prog: &Program) {
-        prog.send_bytes(0, "init");
-    }
-    init_program(&program);
+    program.send_bytes(0, "let's goooo!");
 
-    let res = program.send(42, Action::Flip);
+    let res = program.send(42, FlipperAction::Flip);
     assert_eq!(res.main_failed(), false);
 
-    let res = program.send(69, Action::Flip);
+    let res = program.send(69, FlipperAction::Flip);
     assert_eq!(res.main_failed(), false);
 
-    let res = program.send(1337, Action::Flip);
+    let res = program.send(1337, FlipperAction::Flip);
     assert_eq!(res.main_failed(), false);
 }
