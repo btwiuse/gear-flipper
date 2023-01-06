@@ -1,0 +1,32 @@
+#![no_std]
+
+#[cfg(test)]
+mod tests;
+
+mod io;
+use io::{Action, Event};
+
+use gstd::prelude::*;
+
+gstd::metadata! {
+  title: "flipper",
+  handle:
+    input: Action,
+    output: Event,
+}
+
+static mut STATE: bool = false;
+
+#[no_mangle]
+extern "C" fn handle() {
+    let action: Action = gstd::msg::load().expect("failed to load input message");
+    match action {
+        Action::Flip => unsafe {
+            use gdbg::dbg;
+            use gstd::debug;
+            STATE = dbg!(!STATE);
+            let event = dbg!(Event::FlippedTo(STATE as u8));
+            gstd::msg::reply(event, 0).expect("failed to send response");
+        },
+    }
+}
