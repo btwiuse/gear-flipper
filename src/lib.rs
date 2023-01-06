@@ -22,10 +22,8 @@ extern "C" fn handle() {
     let action: Action = gstd::msg::load().expect("failed to load input message");
     match action {
         Action::Flip => unsafe {
-            use gdbg::dbg;
-            use gstd::debug;
-            STATE = dbg!(!STATE);
-            let event = dbg!(Event::FlippedTo(STATE as u8));
+            STATE = !STATE;
+            let event = Event::FlippedTo(STATE as u8);
             gstd::msg::reply(event, 0).expect("failed to send response");
         },
     }
